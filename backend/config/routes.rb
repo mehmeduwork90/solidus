@@ -13,23 +13,23 @@ Spree::Core::Engine.routes.draw do
       end
     end
 
-    resources :promotions do
-      resources :promotion_rules
-      resources :promotion_actions
+    resources :promotions, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
+      resources :promotion_rules, only: [:index, :create, :new, :edit, :show, :update, :destroy]
+      resources :promotion_actions, only: [:index, :create, :new, :edit, :show, :update, :destroy]
       resources :promotion_codes, only: [:index, :new, :create]
       resources :promotion_code_batches, only: [:index, :new, :create] do
         get '/download', to: "promotion_code_batches#download", defaults: { format: "csv" }
       end
     end
 
-    resources :promotion_categories, except: [:show]
+    resources :promotion_categories, only: [:index, :create, :new, :edit, :update, :destroy]
 
-    resources :zones
+    resources :zones, only: [:index, :create, :new, :edit, :show, :update, :destroy]
 
-    resources :tax_categories
+    resources :tax_categories, only: [:index, :create, :new, :edit, :show, :update, :destroy]
 
-    resources :products do
-      resources :product_properties do
+    resources :products, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
+      resources :product_properties, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
         collection do
           post :update_positions
         end
@@ -39,7 +39,7 @@ Spree::Core::Engine.routes.draw do
           post :update_positions
         end
       end
-      resources :images do
+      resources :images, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
         collection do
           post :update_positions
         end
@@ -57,7 +57,7 @@ Spree::Core::Engine.routes.draw do
     end
     get '/products/:product_slug/stock', to: "stock_items#index", as: :product_stock
 
-    resources :option_types do
+    resources :option_types, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
       collection do
         post :update_positions
         post :update_values_positions
@@ -66,11 +66,11 @@ Spree::Core::Engine.routes.draw do
 
     delete '/option_values/:id', to: "option_values#destroy", as: :option_value
 
-    resources :properties
+    resources :properties, only: [:index, :create, :new, :edit, :show, :update, :destroy]
 
     delete '/product_properties/:id', to: "product_properties#destroy", as: :product_property
 
-    resources :orders, except: [:show] do
+    resources :orders, only: [:index, :create, :new, :edit, :update, :destroy] do
       member do
         get :cart
         put :advance
@@ -91,8 +91,8 @@ Spree::Core::Engine.routes.draw do
         end
       end
 
-      resources :adjustments
-      resources :return_authorizations do
+      resources :adjustments, only: [:index, :create, :new, :edit, :show, :update, :destroy]
+      resources :return_authorizations, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
         member do
           put :fire
         end
@@ -102,7 +102,7 @@ Spree::Core::Engine.routes.draw do
           put :fire
         end
 
-        resources :log_entries
+        resources :log_entries, only: [:index, :create, :new, :edit, :show, :update, :destroy]
         resources :refunds, only: [:new, :create, :edit, :update]
       end
 
@@ -124,11 +124,11 @@ Spree::Core::Engine.routes.draw do
 
     resources :return_items, only: [:update]
 
-    resources :taxonomies do
+    resources :taxonomies, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
       collection do
         post :update_positions
       end
-      resources :taxons do
+      resources :taxons, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
         resource :attachment, controller: 'taxons/attachment', only: [:destroy]
       end
     end
@@ -140,15 +140,15 @@ Spree::Core::Engine.routes.draw do
     end
 
     resources :reimbursement_types, only: [:index]
-    resources :adjustment_reasons, except: [:show, :destroy]
-    resources :refund_reasons, except: [:show, :destroy]
-    resources :return_reasons, except: [:show, :destroy]
-    resources :store_credit_reasons, except: [:show]
+    resources :adjustment_reasons, only: [:index, :create, :new, :edit, :update]
+    resources :refund_reasons, only: [:index, :create, :new, :edit, :update]
+    resources :return_reasons, only: [:index, :create, :new, :edit, :update]
+    resources :store_credit_reasons, only: [:index, :create, :new, :edit, :update, :destroy]
 
-    resources :shipping_methods
-    resources :shipping_categories
+    resources :shipping_methods, only: [:index, :create, :new, :edit, :show, :update, :destroy]
+    resources :shipping_categories, only: [:index, :create, :new, :edit, :show, :update, :destroy]
 
-    resources :stock_locations do
+    resources :stock_locations, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
       resources :stock_movements, only: [:index]
       collection do
         post :transfer_stock
@@ -156,23 +156,23 @@ Spree::Core::Engine.routes.draw do
       end
     end
 
-    resources :stock_items, except: [:show, :new, :edit]
-    resources :tax_rates
+    resources :stock_items, only: [:index, :create, :update, :destroy]
+    resources :tax_rates, only: [:index, :create, :new, :edit, :show, :update, :destroy]
 
-    resources :payment_methods do
+    resources :payment_methods, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
       collection do
         post :update_positions
       end
     end
 
-    resources :users do
+    resources :users, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
       member do
         get :orders
         get :items
         get :addresses
         put :addresses
       end
-      resources :store_credits, except: [:destroy] do
+      resources :store_credits, only: [:index, :create, :new, :edit, :show, :update] do
         member do
           get :edit_amount
           put :update_amount

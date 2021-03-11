@@ -2,7 +2,7 @@
 
 Spree::Core::Engine.routes.draw do
   namespace :admin do
-    resources :users do
+    resources :users, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
       resource :api_key, controller: 'users/api_key', only: [:create, :destroy]
 
       member do
@@ -15,15 +15,15 @@ Spree::Core::Engine.routes.draw do
   namespace :api, defaults: { format: 'json' } do
     resources :promotions, only: [:show]
 
-    resources :products do
-      resources :images
-      resources :variants
-      resources :product_properties
+    resources :products, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
+      resources :images, only: [:index, :create, :new, :edit, :show, :update, :destroy]
+      resources :variants, only: [:index, :create, :new, :edit, :show, :update, :destroy]
+      resources :product_properties, only: [:index, :create, :new, :edit, :show, :update, :destroy]
     end
 
     concern :order_routes do
-      resources :line_items
-      resources :payments do
+      resources :line_items, only: [:index, :create, :new, :edit, :show, :update, :destroy]
+      resources :payments, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
         member do
           put :authorize
           put :capture
@@ -35,13 +35,13 @@ Spree::Core::Engine.routes.draw do
 
       resources :addresses, only: [:show, :update]
 
-      resources :return_authorizations do
+      resources :return_authorizations, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
         member do
           put :cancel
         end
       end
 
-      resources :customer_returns, except: :destroy
+      resources :customer_returns, only: [:index, :create, :new, :edit, :show, :update]
     end
 
     resources :checkouts, only: [:update], concerns: :order_routes do
@@ -52,19 +52,19 @@ Spree::Core::Engine.routes.draw do
       end
     end
 
-    resources :variants do
-      resources :images
+    resources :variants, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
+      resources :images, only: [:index, :create, :new, :edit, :show, :update, :destroy]
     end
 
-    resources :option_types do
-      resources :option_values
+    resources :option_types, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
+      resources :option_values, only: [:index, :create, :new, :edit, :show, :update, :destroy]
     end
-    resources :option_values
+    resources :option_values, only: [:index, :create, :new, :edit, :show, :update, :destroy]
 
     get '/orders/mine', to: 'orders#mine', as: 'my_orders'
     get "/orders/current", to: "orders#current", as: "current_order"
 
-    resources :orders, concerns: :order_routes do
+    resources :orders, only: [:index, :create, :new, :edit, :show, :update, :destroy], concerns: :order_routes do
       member do
         put :cancel
         put :empty
@@ -74,7 +74,7 @@ Spree::Core::Engine.routes.draw do
       resources :coupon_codes, only: [:create, :destroy]
     end
 
-    resources :zones
+    resources :zones, only: [:index, :create, :new, :edit, :show, :update, :destroy]
     resources :countries, only: [:index, :show] do
       resources :states, only: [:index, :show]
     end
@@ -98,11 +98,11 @@ Spree::Core::Engine.routes.draw do
     end
     resources :states, only: [:index, :show]
 
-    resources :taxonomies do
+    resources :taxonomies, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
       member do
         get :jstree
       end
-      resources :taxons do
+      resources :taxons, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
         member do
           get :jstree
         end
@@ -113,22 +113,22 @@ Spree::Core::Engine.routes.draw do
 
     resources :inventory_units, only: [:show, :update]
 
-    resources :users do
+    resources :users, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
       resources :credit_cards, only: [:index]
       resource :address_book, only: [:show, :update, :destroy]
     end
 
     resources :credit_cards, only: [:update]
 
-    resources :properties
-    resources :stock_locations do
-      resources :stock_movements
-      resources :stock_items
+    resources :properties, only: [:index, :create, :new, :edit, :show, :update, :destroy]
+    resources :stock_locations, only: [:index, :create, :new, :edit, :show, :update, :destroy] do
+      resources :stock_movements, only: [:index, :create, :new, :edit, :show, :update, :destroy]
+      resources :stock_items, only: [:index, :create, :new, :edit, :show, :update, :destroy]
     end
 
     resources :stock_items, only: [:index, :update, :destroy]
 
-    resources :stores
+    resources :stores, only: [:index, :create, :new, :edit, :show, :update, :destroy]
 
     resources :store_credit_events, only: [] do
       collection do
